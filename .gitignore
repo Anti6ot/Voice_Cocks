@@ -1,0 +1,16 @@
+@"
+# Виртуальное окружение (никогда не коммитим!)
+venv/
+
+# Папка с загружаемыми моделями (они скачиваются скриптом)
+models/
+
+# Служебные файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Настройки IDE
+.vscode/
+.idea/
+"@ | Out-File -FilePath .gitignore -Encoding utf8
