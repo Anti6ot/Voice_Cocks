@@ -1,6 +1,6 @@
 faster-whisper==1.0.3
 PyAudioWPatch==0.2.12.8
-webrtcvad-wheels==2.0.14
+webrtcvad==2.0.10
 argostranslate==1.9.6
 numpy==1.26.4
 colorama==0.4.6
