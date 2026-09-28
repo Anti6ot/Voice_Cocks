@@ -23,7 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install --force-reinstall setuptools
+          pip install "setuptools<70"
           pip install pyinstaller
       
       - name: 🔨 Build EXE with PyInstaller
@@ -38,7 +38,6 @@ jobs:
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
             --collect-all setuptools `
-            --recursive-copy-metadata setuptools `
             main.py
 
 
