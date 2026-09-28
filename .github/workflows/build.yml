@@ -3,39 +3,52 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'  # Запускается при создании тега вида v1.0.0
+      - 'v*'  # Запускается ТОЛЬКО при создании тега вида v1.0.0, v1.1.0 и т.д.
+  workflow_dispatch:  # Позволяет запускать вручную из веб-интерфейса GitHub
 
 jobs:
   build:
     runs-on: windows-latest
     
     steps:
-      - uses: actions/checkout@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
       
-      - name: Set up Python
+      - name: 🐍 Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
       
-      - name: Build EXE
+      - name: 🔨 Build EXE with PyInstaller
         run: |
-            pyinstaller --onefile --windowed --name Voice_Cocks `
-                --hidden-import=ctranslate2 `
-                --hidden-import=sentencepiece `
-                --hidden-import=huggingface_hub `
-                --collect-all ctranslate2 `
-                --collect-all sentencepiece `
-                main.py
+          pyinstaller --onefile --windowed --name DiscordTranslator `
+            --hidden-import=ctranslate2 `
+            --hidden-import=faster_whisper `
+            --hidden-import=sentencepiece `
+            --hidden-import=huggingface_hub `
+            --hidden-import=argostranslate `
+            --collect-all ctranslate2 `
+            --collect-all sentencepiece `
+            main.py
       
-      - name: Create Release
+      - name: 📤 Verify build output
+        run: |
+          dir dist\DiscordTranslator.exe
+      
+      - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: dist/DiscordTranslator.exe
+          name: "DiscordTranslator ${{ github.ref_name }}"
+          generate_release_notes: true
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
