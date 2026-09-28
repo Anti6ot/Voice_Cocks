@@ -38,7 +38,7 @@ jobs:
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
             --collect-all setuptools `
-            --copy-metadata setuptools `
+            --recursive-copy-metadata setuptools `
             main.py
 
 
