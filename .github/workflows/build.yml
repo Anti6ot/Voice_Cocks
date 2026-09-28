@@ -3,8 +3,8 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*'  # Запускается ТОЛЬКО при создании тега вида v1.0.0, v1.1.0 и т.д.
-  workflow_dispatch:  # Позволяет запускать вручную из веб-интерфейса GitHub
+      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.12'
       
+      - name: 🔧 Setup MSVC Build Tools
+        uses: ilammy/msvc-dev-cmd@v1
+      
       - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -32,7 +35,7 @@ jobs:
             --hidden-import=faster_whisper `
             --hidden-import=sentencepiece `
             --hidden-import=huggingface_hub `
-            --hidden-import=argostranslate `
+            --hidden-import=webrtcvad `
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
             main.py
