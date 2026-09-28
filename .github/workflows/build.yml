@@ -33,10 +33,9 @@ jobs:
             --hidden-import=sentencepiece `
             --hidden-import=huggingface_hub `
             --hidden-import=webrtcvad `
-            --hidden-import=pkg_resources `
-            --hidden-import=setuptools `
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
+            --collect-all setuptools `
             main.py
 
 
