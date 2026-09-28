@@ -1,0 +1,44 @@
+# Python
+# Артефакты сборки (PyInstaller и др.)
+build/
+dist/
+*.spec
+
+# Виртуальное окружение и кэш Python
+venv/
+__pycache__/
+*.pyc
+
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# Модели (они большие, их скачивает сам скрипт)
+models/
+*.bin
+*.sp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Сборки PyInstaller
+build/
+dist/
+*.spec
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
