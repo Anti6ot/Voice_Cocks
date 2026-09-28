@@ -7,7 +7,7 @@
 
 ## ⚡ Быстрый старт (для пользователей)
 
-1. Скачайте последнюю версию: **[📥 DiscordTranslator.exe](https://github.com/Anti6ot/discord-translator/releases/latest/download/DiscordTranslator.exe)**
+1. Скачайте последнюю версию: **[📥 DiscordTranslator.exe](https://github.com/Anti6ot/Voice_Cocks/releases/download/v1.0.9/VoiceCocks.exe)**
 2. Установите [VC++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) (один раз)
 3. Запустите `DiscordTranslator.exe`
 4. Выберите устройство вывода (наушники/колонки)
@@ -19,8 +19,8 @@
 <summary>Как запустить из исходников</summary>
 
 ```bash
-git clone https://github.com/Anti6ot/discord-translator.git
-cd discord-translator
+git clone https://github.com/Anti6ot/Voice_Cocks.git
+cd Voice_Cocks
 py -3.12 -m venv venv
 venv\Scripts\activate
 pip install -r requirements.txt
