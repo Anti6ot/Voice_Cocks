@@ -23,6 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install --force-reinstall setuptools
           pip install pyinstaller
       
       - name: 🔨 Build EXE with PyInstaller
@@ -33,9 +34,11 @@ jobs:
             --hidden-import=sentencepiece `
             --hidden-import=huggingface_hub `
             --hidden-import=webrtcvad `
+            --hidden-import=pkg_resources `
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
             --collect-all setuptools `
+            --copy-metadata setuptools `
             main.py
 
 

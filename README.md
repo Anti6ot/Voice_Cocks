@@ -1,6 +1,7 @@
 ![Version](https://img.shields.io/github/v/release/Anti6ot/Voice_Cocks)
 ![Downloads](https://img.shields.io/github/downloads/Anti6ot/Voice_Cocks/total)
 ![License](https://img.shields.io/github/license/Anti6ot/Voice_Cocks)
+![Демонстрация работы приложения](docs/demo.gif)
 
 # 🎧VOICE_COCKS  Переводчик Discord / YouTube (EN -> RU) в реальном времени
 
