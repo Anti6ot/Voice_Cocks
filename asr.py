@@ -16,6 +16,8 @@ class ASR:
             task="transcribe",
             beam_size=1,
             condition_on_previous_text=False,  # <-- ЭТО УБИРАЕТ ПОВТОРЕНИЯ И ГАЛЛЮЦИНАЦИИ
+            no_speech_threshold=0.6,           # <-- Игнорирует куски, где больше 60% тишины/шума
+            without_timestamps=True,
             vad_filter=False,
         )
         return " ".join(seg.text.strip() for seg in segments).strip()
