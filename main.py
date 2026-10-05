@@ -91,7 +91,12 @@ class TranslatorApp:
             
             ensure_en_ru_installed()
             asr = ASR(model_size=self.model_size)
-            segmenter = Segmenter(aggressiveness=3, silence_ms=600, max_utterance_ms=4000)
+            # Оптимальные настройки для плавной речи без обрывов:
+            # aggressiveness=2: баланс между игнорированием шума и ловлей речи
+            # silence_ms=1000: ждем 1 секунду тишины перед тем, как считать фразу законченной (позволяет делать паузы)
+            # max_utterance_ms=10000: принудительный разрыв только если говорят дольше 10 секунд без остановки
+            segmenter = Segmenter(aggressiveness=2, silence_ms=1000, max_utterance_ms=10000)
+            # segmenter = Segmenter(aggressiveness=3, silence_ms=600, max_utterance_ms=4000)
             
             self.root.after(0, lambda: self.update_status("🎧 Слушаю... (говорите или включите аудио)"))
             
