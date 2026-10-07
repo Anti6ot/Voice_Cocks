@@ -2,153 +2,154 @@
 <html>
 <head>
     <meta charset="UTF-8">
-<style>
-    * { 
-        margin: 0; 
-        padding: 0; 
-        box-sizing: border-box; 
-    }
-    html, body {
-        background: transparent;
-        overflow: hidden;
-        user-select: none;
-        height: 100%;
-    }
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        height: 100vh;
-        padding: 10px;
-    }
-    
-    /* Панель управления — всегда поверх и кликабельна */
-    #controls {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 8px;
-        z-index: 1000;
-        opacity: 0.3;
-        transition: opacity 0.3s;
-        pointer-events: auto;  /* Всегда принимает клики */
-    }
-    #controls:hover {
-        opacity: 1;
-    }
-    .control-btn {
-        background: rgba(0, 0, 0, 0.85);
-        color: #fff;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        padding: 8px 14px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.2s;
-        pointer-events: auto;
-    }
-    .control-btn:hover {
-        background: rgba(50, 50, 50, 0.95);
-        border-color: rgba(255, 255, 255, 0.6);
-    }
-    .control-btn.active {
-        background: rgba(0, 150, 255, 0.85);
-        border-color: rgba(0, 150, 255, 1);
-    }
-    
-    /* Контейнер субтитров */
-    #subtitle-container {
-        background: rgba(0, 0, 0, 0.85);
-        border-radius: 16px;
-        padding: 24px 32px;
-        max-width: 1200px;
-        min-width: 400px;
-        width: fit-content;
-        margin: 0 auto;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        max-height: 70vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        pointer-events: auto;  /* Принимает клики для скролла */
-    }
-    
-    /* Оригинальный текст (английский) */
-    #original {
-        color: #b0b0b0;
-        font-size: 18px;
-        margin-bottom: 14px;
-        line-height: 1.6;
-        text-align: center;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        overflow-wrap: break-word;
-    }
-    
-    /* Переведённый текст (русский) */
-    #translated {
-        color: #ffffff;
-        font-size: 28px;
-        font-weight: 700;
-        line-height: 1.5;
-        text-align: center;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-        overflow-wrap: break-word;
-    }
-    
-    /* Статус подключения */
-    #status {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
-        background: rgba(0, 0, 0, 0.5);
-        padding: 4px 8px;
-        border-radius: 6px;
-        pointer-events: none;  /* Не мешает кликам */
-    }
-    
-    /* Скрытие субтитров */
-    .hidden {
-        opacity: 0;
-        pointer-events: none !important;  /* Не кликабельно когда скрыто */
-        transition: opacity 0.3s;
-    }
-    .visible {
-        opacity: 1;
-        transition: opacity 0.3s;
-    }
-    
-    /* Скроллбар */
-    #subtitle-container::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-    #subtitle-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 4px;
-    }
-    #subtitle-container::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.4);
-        border-radius: 4px;
-    }
-    #subtitle-container::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.6);
-    }
-</style>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        html, body {
+            background: transparent;
+            overflow: hidden;
+            user-select: none;
+            height: 100%;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
+            padding: 8px;
+        }
+        
+        /* Контейнер субтитров */
+        #subtitle-container {
+            background: rgba(0, 0, 0, 0.098);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 18px 24px;
+            max-width: 100%;
+            min-width: 300px;
+            width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            max-height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            pointer-events: auto;
+            cursor: default;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Оригинальный текст (английский) */
+        #original {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            text-align: center;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+        
+        /* Переведённый текст (русский) */
+        #translated {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Зона перетаскивания (верхняя полоска) */
+        #drag-handle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            cursor: grab;
+            z-index: 100;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #drag-handle:hover {
+            opacity: 1;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+        }
+        #drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        /* Зона изменения размера (правый нижний угол) */
+        #resize-handle {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 20px;
+            height: 20px;
+            cursor: nwse-resize;
+            z-index: 100;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #resize-handle:hover {
+            opacity: 1;
+        }
+        #resize-handle::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 10px;
+            height: 10px;
+            border-right: 2px solid rgba(255, 255, 255, 0.5);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Скрытие субтитров */
+        .hidden {
+            opacity: 0;
+            pointer-events: none !important;
+            transition: opacity 0.3s;
+        }
+        .visible {
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        
+        /* Скроллбар */
+        #subtitle-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        #subtitle-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 3px;
+        }
+        #subtitle-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        #subtitle-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
 </head>
 <body>
-    <!-- Панель управления -->
-    <div id="controls">
-        <button class="control-btn active" id="toggle-btn">Субтитры: ВКЛ</button>
-        <button class="control-btn" id="settings-btn">⚙</button>
-    </div>
+    <!-- Зона перетаскивания -->
+    <div id="drag-handle"></div>
     
-    <!-- Статус -->
-    <div id="status">🔴 Отключено</div>
+    <!-- Зона изменения размера -->
+    <div id="resize-handle"></div>
     
     <!-- Субтитры -->
     <div id="subtitle-container" class="visible">
