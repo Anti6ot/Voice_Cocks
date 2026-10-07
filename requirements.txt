@@ -1,10 +1,9 @@
+pyaudiowpatch==0.2.12.8
 faster-whisper==1.0.3
-PyAudioWPatch==0.2.12.8
-   webrtcvad-wheels==2.0.14
-argostranslate==1.9.6
+webrtcvad-wheels==2.0.14
+ctranslate2==4.8.2
 numpy==1.26.4
-colorama==0.4.6
-PyQt6==6.7.1
-sentencepiece==0.2.0
-huggingface-hub
-setuptools
+scipy==1.13.1
+websockets
+transformers
+sentencepiece

@@ -42,3 +42,6 @@ Thumbs.db
 
 # Логи
 *.log
+
+
+overlay/node_modules/

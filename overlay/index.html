@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+<style>
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+    }
+    html, body {
+        background: transparent;
+        overflow: hidden;
+        user-select: none;
+        height: 100%;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100vh;
+        padding: 10px;
+    }
+    
+    /* Панель управления — всегда поверх и кликабельна */
+    #controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 8px;
+        z-index: 1000;
+        opacity: 0.3;
+        transition: opacity 0.3s;
+        pointer-events: auto;  /* Всегда принимает клики */
+    }
+    #controls:hover {
+        opacity: 1;
+    }
+    .control-btn {
+        background: rgba(0, 0, 0, 0.85);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        pointer-events: auto;
+    }
+    .control-btn:hover {
+        background: rgba(50, 50, 50, 0.95);
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+    .control-btn.active {
+        background: rgba(0, 150, 255, 0.85);
+        border-color: rgba(0, 150, 255, 1);
+    }
+    
+    /* Контейнер субтитров */
+    #subtitle-container {
+        background: rgba(0, 0, 0, 0.85);
+        border-radius: 16px;
+        padding: 24px 32px;
+        max-width: 1200px;
+        min-width: 400px;
+        width: fit-content;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        pointer-events: auto;  /* Принимает клики для скролла */
+    }
+    
+    /* Оригинальный текст (английский) */
+    #original {
+        color: #b0b0b0;
+        font-size: 18px;
+        margin-bottom: 14px;
+        line-height: 1.6;
+        text-align: center;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+    }
+    
+    /* Переведённый текст (русский) */
+    #translated {
+        color: #ffffff;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 1.5;
+        text-align: center;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+    }
+    
+    /* Статус подключения */
+    #status {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        background: rgba(0, 0, 0, 0.5);
+        padding: 4px 8px;
+        border-radius: 6px;
+        pointer-events: none;  /* Не мешает кликам */
+    }
+    
+    /* Скрытие субтитров */
+    .hidden {
+        opacity: 0;
+        pointer-events: none !important;  /* Не кликабельно когда скрыто */
+        transition: opacity 0.3s;
+    }
+    .visible {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+    
+    /* Скроллбар */
+    #subtitle-container::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    #subtitle-container::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+    }
+    #subtitle-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+    }
+    #subtitle-container::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.6);
+    }
+</style>
+</head>
+<body>
+    <!-- Панель управления -->
+    <div id="controls">
+        <button class="control-btn active" id="toggle-btn">Субтитры: ВКЛ</button>
+        <button class="control-btn" id="settings-btn">⚙</button>
+    </div>
+    
+    <!-- Статус -->
+    <div id="status">🔴 Отключено</div>
+    
+    <!-- Субтитры -->
+    <div id="subtitle-container" class="visible">
+        <div id="original">Ожидание речи...</div>
+        <div id="translated">Подключение к серверу...</div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>
