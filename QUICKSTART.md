@@ -7,11 +7,14 @@
 
 ## ⚡ Быстрый старт (для пользователей)
 
-1. Скачайте последнюю версию: **[📥 DiscordTranslator.exe](https://github.com/Anti6ot/Voice_Cocks/releases/download/v1.0.9/VoiceCocks.exe)**
-2. Установите [VC++ Redistributable](https://aka.ms/vs/17/release/vc_redist.x64.exe) (один раз)
-3. Запустите `DiscordTranslator.exe`
-4. Выберите устройство вывода (наушники/колонки)
-5. Готово! Субтитры появятся внизу экрана.
+# Варинт А (с последними обновлениями)
+1. Простой запуск через батник ./start.bat 
+
+# Варинт B 
+2. Скачайте последнюю версию: **[📥 DiscordTranslator.exe](https://github.com/Anti6ot/Voice_Cocks/releases/download/v1.0.9/VoiceCocks.exe)**
+4. Запустите `DiscordTranslator.exe`
+5. Выберите устройство вывода (наушники/колонки)
+6. Готово! Субтитры появятся внизу экрана.
 
 ## 🛠 Для разработчиков
 
