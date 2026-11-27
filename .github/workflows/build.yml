@@ -50,6 +50,8 @@ jobs:
             --collect-all pyaudiowpatch `
             --collect-all webrtcvad `
             --collect-all huggingface_hub `
+            --collect-all tqdm `
+            --hidden-import=requests `
             --hidden-import=websockets `
             --hidden-import=config_server `
             server.py

@@ -6,3 +6,5 @@ numpy==1.26.4
 websockets
 huggingface-hub
 sentencepiece
+requests
+tqdm
