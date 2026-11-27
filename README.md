@@ -280,3 +280,4 @@ segmenter = Segmenter(aggressiveness=2, silence_ms=1000, max_utterance_ms=15000)
 ## ⭐ Поддержка проекта
 
 Если проект оказался полезным — поставь ⭐ на репозитории.
+----
