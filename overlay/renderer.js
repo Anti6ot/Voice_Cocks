@@ -115,7 +115,7 @@ subtitleContainer.addEventListener('mouseleave', () => {
 
 // === WEBSOCKET ===
 let reconnectAttempts = 0;
-const MAX_RECONNECT_ATTEMPTS = 5; // ~10 секунд без бэкенда — закрываем оверлей
+const MAX_RECONNECT_ATTEMPTS = 15; // ~30 секунд без бэкенда — закрываем оверлей
 
 function connect() {
     ws = new WebSocket('ws://localhost:8765');

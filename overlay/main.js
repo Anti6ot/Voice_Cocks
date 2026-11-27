@@ -1,6 +1,7 @@
 const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 let settingsWindow;
 let mainWindow;
@@ -11,16 +12,34 @@ function startBackend() {
     if (!app.isPackaged) return; // в dev-режиме бэкенд запускается отдельно (start_electron.bat)
 
     const backendPath = path.join(process.resourcesPath, 'backend', 'voicecocks-backend.exe');
+    const logDir = path.join(app.getPath('appData'), 'VoiceCocks');
+    const logFile = path.join(logDir, 'backend.log');
+
+    try { fs.mkdirSync(logDir, { recursive: true }); } catch (e) {}
+
+    const writeLog = (line) => {
+        try { fs.appendFileSync(logFile, line + '\n'); } catch (e) {}
+    };
+
+    writeLog('[main] Starting backend: ' + backendPath);
+
+    if (!fs.existsSync(backendPath)) {
+        writeLog('[main] ERROR: backend.exe не найден по пути ' + backendPath);
+        return;
+    }
+
     try {
+        const out = fs.createWriteStream(logFile, { flags: 'a' });
         backendProcess = spawn(backendPath, [], {
             cwd: path.dirname(backendPath),
             windowsHide: true,
         });
-        backendProcess.on('error', (err) => {
-            console.error('[main] Не удалось запустить бэкенд:', err);
-        });
+        backendProcess.stdout.pipe(out);
+        backendProcess.stderr.pipe(out);
+        backendProcess.on('error', (err) => writeLog('[main] spawn error: ' + err.message));
+        backendProcess.on('exit', (code, signal) => writeLog('[main] backend exited: code=' + code + ' signal=' + signal));
     } catch (e) {
-        console.error('[main] Ошибка запуска бэкенда:', e);
+        writeLog('[main] startBackend error: ' + e.message);
     }
 }
 
