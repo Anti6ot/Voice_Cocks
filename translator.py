@@ -1,31 +1,73 @@
 """
-Перевод EN -> RU через argos-translate. Пакет EN->RU скачивается и
-устанавливается одной функцией, без ручной конвертации моделей.
+Перевод EN -> RU через ctranslate2 + sentencepiece-токенизатор.
+Модель (ctranslate2-формат) скачивается автоматически при первом запуске.
 """
-import argostranslate.package
-import argostranslate.translate
+import os
+
+import ctranslate2
+import sentencepiece as spm
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models", "opus-mt-en-ru")
+
+# Готовый ctranslate2-конвертированный OPUS-MT (en -> ru) с токенизаторами
+MODEL_REPO = "ooeoeo/opus-mt-en-ru-ct2-float16"
+
+_translator = None
+_source_sp = None
+_target_sp = None
+
+
+def _download_model():
+    """Скачивает ctranslate2-модель в MODEL_DIR при первом запуске."""
+    from huggingface_hub import snapshot_download
+
+    print(f"[translator] Скачиваю модель перевода {MODEL_REPO}...", flush=True)
+    print("[translator] Это займёт несколько минут (около 150 МБ), только первый раз.", flush=True)
+
+    downloaded = snapshot_download(
+        repo_id=MODEL_REPO,
+        local_dir=MODEL_DIR,
+        ignore_patterns=["*.git*", "*.md"],
+    )
+    print(f"[translator] Модель сохранена в: {downloaded}", flush=True)
 
 
 def ensure_en_ru_installed():
-    installed_languages = argostranslate.translate.get_installed_languages()
-    installed_codes = {lang.code for lang in installed_languages}
+    global _translator, _source_sp, _target_sp
 
-    if "en" in installed_codes and "ru" in installed_codes:
-        en_lang = next(l for l in installed_languages if l.code == "en")
-        if any(t.to_lang.code == "ru" for t in en_lang.translations_from):
-            return  # пакет уже стоит
+    if _translator is not None:
+        return
 
-    print("Скачиваю языковой пакет EN -> RU (один раз, дальше работает офлайн)...")
-    argostranslate.package.update_package_index()
-    available_packages = argostranslate.package.get_available_packages()
-    package = next(
-        p for p in available_packages if p.from_code == "en" and p.to_code == "ru"
-    )
-    argostranslate.package.install_from_path(package.download())
-    print("Пакет EN -> RU установлен.")
+    if not os.path.isfile(os.path.join(MODEL_DIR, "model.bin")):
+        _download_model()
+
+    print(f"[translator] Загружаю модель из: {MODEL_DIR}", flush=True)
+    _translator = ctranslate2.Translator(MODEL_DIR, device="cpu")
+
+    # Для OPUS-MT/Marian токенизация идёт через sentencepiece-модели
+    _source_sp = spm.SentencePieceProcessor(model_file=os.path.join(MODEL_DIR, "source.spm"))
+    _target_sp = spm.SentencePieceProcessor(model_file=os.path.join(MODEL_DIR, "target.spm"))
+
+    print("[translator] Модель перевода загружена.", flush=True)
 
 
 def translate_en_to_ru(text: str) -> str:
-    if not text:
+    if not text or _translator is None:
         return ""
-    return argostranslate.translate.translate(text, "en", "ru")
+
+    # Токенизируем исходный текст и явно добавляем EOS (</s>),
+    # т.к. в конфиге модели add_source_eos=false.
+    source_tokens = _source_sp.encode(text, out_type=str) + ["</s>"]
+    results = _translator.translate_batch(
+        [source_tokens],
+        beam_size=1,
+        repetition_penalty=1.2,
+        no_repeat_ngram_size=3,
+        max_decoding_length=100,
+    )
+    output_tokens = results[0].hypotheses[0]
+
+    # Превращаем строки токенов обратно в id и декодируем целевой текст
+    target_ids = [_target_sp.piece_to_id(tok) for tok in output_tokens]
+    return _target_sp.decode(target_ids)

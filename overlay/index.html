@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        html, body {
+            background: transparent;
+            overflow: hidden;
+            user-select: none;
+            height: 100%;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 100vh;
+            padding: 8px;
+        }
+        
+        /* Контейнер субтитров */
+        #subtitle-container {
+            background: rgba(0, 0, 0, 0.098);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 14px;
+            padding: 18px 24px;
+            max-width: 100%;
+            min-width: 300px;
+            width: 100%;
+            margin: 0 auto;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            max-height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            pointer-events: auto;
+            cursor: default;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Оригинальный текст (английский) */
+        #original {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            text-align: center;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+        
+        /* Переведённый текст (русский) */
+        #translated {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Зона перетаскивания (верхняя полоска) */
+        #drag-handle {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            cursor: grab;
+            z-index: 100;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #drag-handle:hover {
+            opacity: 1;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+        }
+        #drag-handle:active {
+            cursor: grabbing;
+        }
+        
+        /* Зона изменения размера (правый нижний угол) */
+        #resize-handle {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            cursor: nwse-resize;
+            z-index: 100;
+            pointer-events: auto;
+            opacity: 0.65;
+            transition: opacity 0.2s;
+        }
+        #resize-handle:hover {
+            opacity: 1;
+        }
+        #resize-handle::after {
+            content: '';
+            position: absolute;
+            bottom: 7px;
+            right: 7px;
+            width: 13px;
+            height: 13px;
+            border-right: 3px solid rgba(255, 255, 255, 0.85);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.85);
+            border-radius: 2px;
+        }
+        
+        /* Скрытие субтитров */
+        .hidden {
+            opacity: 0;
+            pointer-events: none !important;
+            transition: opacity 0.3s;
+        }
+        .visible {
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+        
+        /* Скроллбар */
+        #subtitle-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        #subtitle-container::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 3px;
+        }
+        #subtitle-container::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        #subtitle-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Зона перетаскивания -->
+    <div id="drag-handle"></div>
+    
+    <!-- Зона изменения размера -->
+    <div id="resize-handle"></div>
+    
+    <!-- Субтитры -->
+    <div id="subtitle-container" class="visible">
+        <div id="original">Ожидание речи...</div>
+        <div id="translated">Подключение к серверу...</div>
+    </div>
+    
+    <script src="renderer.js"></script>
+</body>
+</html>

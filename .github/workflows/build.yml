@@ -1,0 +1,64 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # запускается при создании тега вида v1.0.0, v1.1.0 и т.д.
+  workflow_dispatch:  # позволяет запускать вручную из веб-интерфейса GitHub
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Download translation model (ctranslate2)
+        run: |
+          python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='ooeoeo/opus-mt-en-ru-ct2-float16', local_dir='models/opus-mt-en-ru', ignore_patterns=['*.git*', '*.md'])"
+
+      - name: Build EXE with PyInstaller
+        run: |
+          pyinstaller --onefile --windowed --name VoiceCocks `
+            --add-data "models;models" `
+            --hidden-import=ctranslate2 `
+            --hidden-import=faster_whisper `
+            --hidden-import=sentencepiece `
+            --hidden-import=webrtcvad `
+            --hidden-import=huggingface_hub `
+            --collect-all ctranslate2 `
+            --collect-all sentencepiece `
+            --collect-all av `
+            --collect-all onnxruntime `
+            --collect-all tokenizers `
+            main.py
+
+      - name: Verify build output
+        run: |
+          dir dist\VoiceCocks.exe
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: dist/VoiceCocks.exe
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

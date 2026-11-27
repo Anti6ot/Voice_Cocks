@@ -1,16 +1,47 @@
-@"
-# Виртуальное окружение (никогда не коммитим!)
+# Python
+# Артефакты сборки (PyInstaller и др.)
+build/
+dist/
+*.spec
+
+# Виртуальное окружение и кэш Python
 venv/
+__pycache__/
+*.pyc
 
-# Папка с загружаемыми моделями (они скачиваются скриптом)
-models/
 
-# Служебные файлы Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+.Python
 
-# Настройки IDE
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# Модели (они большие, их скачивает сам скрипт)
+models/
+*.bin
+*.sp
+
+# IDE
 .vscode/
 .idea/
-"@ | Out-File -FilePath .gitignore -Encoding utf8
+*.swp
+
+# Сборки PyInstaller
+build/
+dist/
+*.spec
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Логи
+*.log
+
+
+overlay/node_modules/
