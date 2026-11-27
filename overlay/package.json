@@ -1,14 +1,43 @@
 {
-  "name": "discord-translator-overlay",
+  "name": "voicecocks",
   "version": "1.0.0",
+  "description": "Voice Cocks — переводчик Discord/YouTube (EN->RU) в реальном времени",
+  "author": "Anti6ot",
+  "license": "MIT",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder --win"
   },
   "trustedDependencies": [
     "electron"
   ],
   "devDependencies": {
-    "electron": "^31.0.0"
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.voicecocks.app",
+    "productName": "VoiceCocks",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "../dist/voicecocks-backend.exe",
+        "to": "backend/voicecocks-backend.exe"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }

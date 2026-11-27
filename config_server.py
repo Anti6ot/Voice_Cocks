@@ -16,7 +16,18 @@ if sys.stdout is None:
 if sys.stderr is None:
     sys.stderr = sys.stdout
 
-CONFIG_FILE = "settings.json"
+
+def _get_config_file():
+    """Путь к settings.json: в сборке — в APPDATA, иначе рядом с кодом."""
+    if getattr(sys, "frozen", False):
+        appdata = os.environ.get("APPDATA") or os.path.expanduser("~")
+        d = os.path.join(appdata, "VoiceCocks")
+        os.makedirs(d, exist_ok=True)
+        return os.path.join(d, "settings.json")
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "settings.json")
+
+
+CONFIG_FILE = _get_config_file()
 
 
 def load_config():

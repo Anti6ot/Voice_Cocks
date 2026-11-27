@@ -22,7 +22,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -32,31 +37,40 @@ jobs:
         run: |
           python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='ooeoeo/opus-mt-en-ru-ct2-float16', local_dir='models/opus-mt-en-ru', ignore_patterns=['*.git*', '*.md'])"
 
-      - name: Build EXE with PyInstaller
+      - name: Build Python backend (exe)
         run: |
-          pyinstaller --onefile --windowed --name VoiceCocks `
+          pyinstaller --onefile --noconfirm --name voicecocks-backend `
             --add-data "models;models" `
-            --hidden-import=ctranslate2 `
-            --hidden-import=faster_whisper `
-            --hidden-import=sentencepiece `
-            --hidden-import=webrtcvad `
-            --hidden-import=huggingface_hub `
             --collect-all ctranslate2 `
             --collect-all sentencepiece `
             --collect-all av `
             --collect-all onnxruntime `
             --collect-all tokenizers `
-            main.py
+            --hidden-import=websockets `
+            --hidden-import=pyaudiowpatch `
+            --hidden-import=webrtcvad `
+            --hidden-import=huggingface_hub `
+            server.py
+
+      - name: Install Electron dependencies
+        working-directory: overlay
+        run: npm install
+
+      - name: Build Electron installer
+        working-directory: overlay
+        run: npx electron-builder --win --publish never
 
       - name: Verify build output
         run: |
-          dir dist\VoiceCocks.exe
+          dir dist\voicecocks-backend.exe
+          dir overlay\dist
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/VoiceCocks.exe
+          files: |
+            overlay/dist/*.exe
           generate_release_notes: true
           draft: false
           prerelease: false

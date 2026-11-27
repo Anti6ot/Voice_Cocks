@@ -1,8 +1,35 @@
 const { app, BrowserWindow, screen, ipcMain } = require('electron');
 const path = require('path');
+const { spawn } = require('child_process');
 
 let settingsWindow;
 let mainWindow;
+let backendProcess = null;
+
+// В собранном приложении бэкенд (Python) встроен рядом с приложением.
+function startBackend() {
+    if (!app.isPackaged) return; // в dev-режиме бэкенд запускается отдельно (start_electron.bat)
+
+    const backendPath = path.join(process.resourcesPath, 'backend', 'voicecocks-backend.exe');
+    try {
+        backendProcess = spawn(backendPath, [], {
+            cwd: path.dirname(backendPath),
+            windowsHide: true,
+        });
+        backendProcess.on('error', (err) => {
+            console.error('[main] Не удалось запустить бэкенд:', err);
+        });
+    } catch (e) {
+        console.error('[main] Ошибка запуска бэкенда:', e);
+    }
+}
+
+function stopBackend() {
+    if (backendProcess) {
+        try { backendProcess.kill(); } catch (e) {}
+        backendProcess = null;
+    }
+}
 
 function createSettingsWindow() {
     settingsWindow = new BrowserWindow({
@@ -145,7 +172,12 @@ ipcMain.on('set-window-size', (event, width, height) => {
     }
 });
 
-app.whenReady().then(createSettingsWindow);
+app.whenReady().then(() => {
+    startBackend();
+    createSettingsWindow();
+});
+
+app.on('before-quit', stopBackend);
 
 app.on('window-all-closed', () => {
     app.quit();

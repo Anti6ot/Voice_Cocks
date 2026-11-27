@@ -17,16 +17,7 @@ from audio_capture import LoopbackStream, list_output_devices, pick_default_outp
 from vad import Segmenter
 from asr import ASR
 from translator import ensure_en_ru_installed, translate_en_to_ru
-from config_server import run_config_server
-
-CONFIG_FILE = "settings.json"
-
-
-def load_config():
-    if os.path.exists(CONFIG_FILE):
-        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return {"device": 0, "model": "tiny"}
+from config_server import run_config_server, load_config, save_config, CONFIG_FILE
 
 
 def config_signature():

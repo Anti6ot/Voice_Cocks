@@ -3,12 +3,24 @@
 Модель (ctranslate2-формат) скачивается автоматически при первом запуске.
 """
 import os
+import sys
 
 import ctranslate2
 import sentencepiece as spm
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "models", "opus-mt-en-ru")
+
+def _get_model_dir():
+    """Каталог модели: в сборке — из _MEIPASS или APPDATA, иначе рядом с кодом."""
+    if getattr(sys, "frozen", False):
+        bundled = os.path.join(getattr(sys, "_MEIPASS", ""), "models", "opus-mt-en-ru")
+        if os.path.isfile(os.path.join(bundled, "model.bin")):
+            return bundled
+        appdata = os.environ.get("APPDATA") or os.path.expanduser("~")
+        return os.path.join(appdata, "VoiceCocks", "models", "opus-mt-en-ru")
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "opus-mt-en-ru")
+
+
+MODEL_DIR = _get_model_dir()
 
 # Готовый ctranslate2-конвертированный OPUS-MT (en -> ru) с токенизаторами
 MODEL_REPO = "ooeoeo/opus-mt-en-ru-ct2-float16"
